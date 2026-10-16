@@ -1,0 +1,12 @@
+{
+  "_comment": "verify 阶段的输入示例。verified_total_fen 应填入 calculate-price 的真实返回金额（单位：分）。此处数值为演示用，与本地穷举的估算一致。",
+  "store": "麦当劳（软件园店）",
+  "channel": "到店自取 · 取餐柜",
+  "items_summary": "巨无霸套餐 ×1 + 麦乐鸡5块 ×1",
+  "baseline_total_fen": 5500,
+  "plans": [
+    {"plan_id": "plan-1", "coupon_ids": ["C3", "C5"], "coupon_titles": ["满 40 减 10", "满 20 送香芋派"], "verified_total_fen": 4500},
+    {"plan_id": "plan-2", "coupon_ids": ["C2"], "coupon_titles": ["小食 8 折"], "verified_total_fen": 5240},
+    {"plan_id": "plan-3", "coupon_ids": [], "coupon_titles": [], "verified_total_fen": 5500}
+  ]
+}

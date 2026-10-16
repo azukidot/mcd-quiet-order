@@ -1,0 +1,18 @@
+{
+  "store_code": "1990622",
+  "store_name": "麦当劳示例餐厅",
+  "currency": "CNY",
+  "items": [
+    {"code": "BIGMAC",       "name": "巨无霸",           "category": "burger", "price_fen": 2500, "calories": 550, "tags": ["beef", "classic"]},
+    {"code": "MCSHSPICY",    "name": "麦辣鸡腿堡",       "category": "burger", "price_fen": 2100, "calories": 520, "tags": ["chicken", "spicy"]},
+    {"code": "FILET",        "name": "麦香鱼",           "category": "burger", "price_fen": 1800, "calories": 390, "tags": ["fish"]},
+    {"code": "BIGMAC_COMBO", "name": "巨无霸套餐",       "category": "combo",  "price_fen": 4200, "calories": 1080, "tags": ["beef", "combo"]},
+    {"code": "SPICY_COMBO",  "name": "麦辣鸡腿堡三件套", "category": "combo",  "price_fen": 3950, "calories": 1050, "tags": ["chicken", "combo"]},
+    {"code": "FRIES_M",      "name": "中薯条",           "category": "side",   "price_fen": 1200, "calories": 340, "tags": ["fries"]},
+    {"code": "FRIES_L",      "name": "大薯条",           "category": "side",   "price_fen": 1500, "calories": 450, "tags": ["fries"]},
+    {"code": "NUGGETS_5",    "name": "麦乐鸡5块",        "category": "side",   "price_fen": 1300, "calories": 250, "tags": ["chicken"]},
+    {"code": "COKE_M",       "name": "可乐(中)",         "category": "drink",  "price_fen": 900,  "calories": 200, "tags": ["drink", "cola"]},
+    {"code": "MCFLOWER",     "name": "麦香鸡",           "category": "burger", "price_fen": 1600, "calories": 400, "tags": ["chicken"]},
+    {"code": "PIE",          "name": "香芋派",           "category": "dessert","price_fen": 800,  "calories": 240, "tags": ["dessert"]}
+  ]
+}

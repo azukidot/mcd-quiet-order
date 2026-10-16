@@ -1,0 +1,140 @@
+{
+  "_comment": "模拟 mcp order-list 工具的返回结构，字段与实测返回一致。金额与订单号均为虚构演示数据，realTotalAmount 的单位以 MCP 实际返回为准。用于 demo.py 的离线全流程演示。",
+  "data": {
+    "list": [
+      {
+        "orderId": "demo-100241",
+        "orderType": 1,
+        "createTime": "2026-10-12 12:31:07",
+        "beType": 1,
+        "beCode": "",
+        "storeCode": "1990622",
+        "storeName": "麦当劳（软件园店）",
+        "orderStatus": 5,
+        "orderProductList": [
+          {
+            "productCode": "BIGMAC_COMBO",
+            "productName": "巨无霸套餐",
+            "quantity": 1,
+            "comboItemList": [
+              { "itemName": "中薯条" },
+              { "itemName": "无糖可乐(中)" }
+            ]
+          }
+        ],
+        "realTotalAmount": 4200
+      },
+      {
+        "orderId": "demo-100198",
+        "orderType": 1,
+        "createTime": "2026-10-08 12:22:40",
+        "beType": 1,
+        "beCode": "",
+        "storeCode": "1990622",
+        "storeName": "麦当劳（软件园店）",
+        "orderStatus": 5,
+        "orderProductList": [
+          {
+            "productCode": "BIGMAC_COMBO",
+            "productName": "巨无霸套餐",
+            "quantity": 1,
+            "comboItemList": [
+              { "itemName": "中薯条" },
+              { "itemName": "无糖可乐(中)" }
+            ]
+          },
+          { "productCode": "PIE", "productName": "香芋派", "quantity": 1, "comboItemList": [] }
+        ],
+        "realTotalAmount": 5000
+      },
+      {
+        "orderId": "demo-100156",
+        "orderType": 1,
+        "createTime": "2026-10-02 12:05:11",
+        "beType": 1,
+        "beCode": "",
+        "storeCode": "1990622",
+        "storeName": "麦当劳（软件园店）",
+        "orderStatus": 5,
+        "orderProductList": [
+          {
+            "productCode": "BIGMAC_COMBO",
+            "productName": "巨无霸套餐",
+            "quantity": 1,
+            "comboItemList": [
+              { "itemName": "中薯条" },
+              { "itemName": "无糖可乐(中)" }
+            ]
+          }
+        ],
+        "realTotalAmount": 4200
+      },
+      {
+        "orderId": "demo-100103",
+        "orderType": 1,
+        "createTime": "2026-09-26 18:47:52",
+        "beType": 1,
+        "beCode": "",
+        "storeCode": "1990622",
+        "storeName": "麦当劳（软件园店）",
+        "orderStatus": 5,
+        "orderProductList": [
+          {
+            "productCode": "BIGMAC_COMBO",
+            "productName": "巨无霸套餐",
+            "quantity": 1,
+            "comboItemList": [
+              { "itemName": "中薯条" },
+              { "itemName": "无糖可乐(中)" }
+            ]
+          }
+        ],
+        "realTotalAmount": 4200
+      },
+      {
+        "orderId": "demo-100087",
+        "orderType": 1,
+        "createTime": "2026-09-19 09:15:33",
+        "beType": 5,
+        "beCode": "DT-3001888",
+        "storeCode": "3001888",
+        "storeName": "麦当劳（火车站店）",
+        "orderStatus": 5,
+        "orderProductList": [
+          {
+            "productCode": "SPICY_COMBO",
+            "productName": "麦辣鸡腿堡三件套",
+            "quantity": 1,
+            "comboItemList": [
+              { "itemName": "大薯条" },
+              { "itemName": "可乐(中)" }
+            ]
+          }
+        ],
+        "realTotalAmount": 3950
+      },
+      {
+        "orderId": "demo-100041",
+        "orderType": 1,
+        "createTime": "2026-09-05 09:02:18",
+        "beType": 5,
+        "beCode": "DT-3001888",
+        "storeCode": "3001888",
+        "storeName": "麦当劳（火车站店）",
+        "orderStatus": 5,
+        "orderProductList": [
+          {
+            "productCode": "SPICY_COMBO",
+            "productName": "麦辣鸡腿堡三件套",
+            "quantity": 1,
+            "comboItemList": [
+              { "itemName": "大薯条" },
+              { "itemName": "可乐(中)" }
+            ]
+          }
+        ],
+        "realTotalAmount": 3950
+      }
+    ]
+  }
+}

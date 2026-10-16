@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>零开口沟通卡 · 麦麦免开口</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #5c5c5c;
+    --ink-faint: #8c8c8c;
+    --paper: #ffffff;
+    --line: #e2e2df;
+    --accent: #c8102e;
+    --accent-soft: #fdeef0;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 16px;
+  }
+  .card {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 3px solid var(--ink);
+    border-radius: 28px;
+    padding: 56px 24px 36px;
+    min-height: 40vh;
+  }
+  .tag {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    font-size: 14px;
+    letter-spacing: .06em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 999px;
+    padding: 5px 14px;
+  }
+  .tag.off { display: none; }
+  .content {
+    font-size: clamp(40px, 12vw, 116px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: .02em;
+    word-break: break-word;
+  }
+  .hint {
+    text-align: center;
+    font-size: clamp(15px, 3.6vw, 20px);
+    color: var(--ink-faint);
+  }
+  .actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  button {
+    font-family: inherit;
+    font-size: 16px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  button.primary { background: var(--ink); color: var(--paper); }
+  button:active { transform: translateY(1px); }
+  .panel { border-top: 1px solid var(--line); padding-top: 14px; }
+  .panel-title {
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin: 0 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-size: 15px;
+    padding: 9px 15px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .chip:hover { border-color: var(--ink); }
+  .chip.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  textarea {
+    font-family: inherit;
+    font-size: 17px;
+    padding: 11px 13px;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    resize: vertical;
+    min-height: 62px;
+    width: 100%;
+    color: var(--ink);
+  }
+  textarea:focus { outline: none; border-color: var(--ink); }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .row textarea { flex: 1; }
+  .hidden { display: none !important; }
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 15px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    opacity: 0;
+    transition: opacity .2s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+  @media print {
+    .actions, .panel, .toast { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="tag" id="tag">不用说话</div>
+    <div class="content" id="content">请把屏幕给店员看</div>
+  </div>
+
+  <div class="hint" id="hint">把这张屏幕举给店员看，不需要开口</div>
+
+  <div class="actions">
+    <button class="primary" id="speak">朗读</button>
+    <button id="fullscreen">全屏</button>
+    <button id="save">存成图片</button>
+  </div>
+
+  <div class="panel">
+    <p class="panel-title">
+      <span>常用诉求，点一下就出卡</span>
+      <span id="tagSwitch" style="cursor:pointer">角标：不用说话 ▾</span>
+    </p>
+    <div class="chips" id="presets"></div>
+  </div>
+
+  <div class="panel">
+    <div class="row">
+      <textarea id="input" placeholder="也可以自己写，比如：麻烦帮我把汉堡切两半"></textarea>
+      <button id="use">用这句</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var content = document.getElementById('content');
+  var hint = document.getElementById('hint');
+  var tagEl = document.getElementById('tag');
+  var input = document.getElementById('input');
+  var toast = document.getElementById('toast');
+
+  // 常用诉求剧本。kind 决定角标与提示语，text 是卡面短句（≤15 字，店员一眼可读）
+  var PRESETS = [
+    { label: '吸管',     kind: 'item',  text: '麻烦给我一根吸管' },
+    { label: '纸巾',     kind: 'item',  text: '麻烦给我一张纸巾' },
+    { label: '手套',     kind: 'item',  text: '麻烦给我一副手套' },
+    { label: '打包袋',   kind: 'item',  text: '麻烦再给我一个打包袋' },
+    { label: '番茄酱',   kind: 'item',  text: '麻烦多给我两包番茄酱' },
+    { label: '去冰',     kind: 'taste', text: '这杯请帮我做成去冰' },
+    { label: '少放酱',   kind: 'taste', text: '酱请少放一点，谢谢' },
+    { label: '不要洋葱', kind: 'taste', text: '请不要放洋葱' },
+    { label: '催一下',   kind: 'ask',   text: '请问大概还要多久' },
+    { label: '谢谢',     kind: 'thanks', text: '谢谢，辛苦了' }
+  ];
+
+  var KINDS = {
+    item:   { tag: '不用说话',   hint: '把这张屏幕举给店员看，不需要开口' },
+    taste:  { tag: '口味调整',   hint: '也可以在下单时直接选特制项，就不用现场说了' },
+    ask:    { tag: '想问一句',   hint: '把这张屏幕举给店员看，不需要开口' },
+    thanks: { tag: '不用说话',   hint: '看一眼就好，不需要开口' },
+    guide:  { tag: '取餐指引',   hint: '按上面的方式自己完成，不需要找人' }
+  };
+
+  // 可选角标。刻意用温和的自嘲，而不是「弱者标签」——
+  // 让举牌这件事像个玩笑，比像个辅助设备更容易被举起来。
+  var TAGS = [
+    { value: 'auto',   label: '跟随场景' },
+    { value: '静音模式', label: '静音模式' },
+    { value: 'i人友好', label: 'i人友好' },
+    { value: '不用说话', label: '不用说话' },
+    { value: 'off',    label: '不显示' }
+  ];
+
+  var state = { kind: 'item', tagMode: 'auto', explicitTag: '' };
+
+  function resolveTag(kind) {
+    if (state.tagMode === 'off') return '';
+    if (state.tagMode === 'auto') return (KINDS[kind] || KINDS.item).tag;
+    return state.tagMode;
+  }
+
+  function apply(text, kind) {
+    if (!text) return;
+    state.kind = kind || 'item';
+    if (state.explicitTag && state.tagMode === 'auto') state.tagMode = state.explicitTag;
+
+    content.textContent = text;
+    input.value = text;
+    var meta = KINDS[state.kind] || KINDS.item;
+    hint.textContent = meta.hint;
+
+    var tag = resolveTag(state.kind);
+    tagEl.textContent = tag;
+    tagEl.classList.toggle('off', !tag);
+    document.title = text + ' · 零开口沟通卡';
+
+    Array.prototype.forEach.call(document.querySelectorAll('.chip'), function (chip) {
+      chip.classList.toggle('active', chip.textContent === text);
+    });
+  }
+
+  function buildPresets() {
+    var box = document.getElementById('presets');
+    PRESETS.forEach(function (p) {
+      var b = document.createElement('button');
+      b.className = 'chip';
+      b.textContent = p.text;
+      b.title = p.label;
+      b.addEventListener('click', function () { apply(p.text, p.kind); });
+      box.appendChild(b);
+    });
+  }
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function () { toast.classList.remove('show'); }, 1800);
+  }
+
+  // 用 Canvas 画一张分享图，不依赖任何外部库
+  function exportImage() {
+    var W = 1080, H = 1440;
+    var canvas = document.createElement('canvas');
+    canvas.width = W;
+    canvas.height = H;
+    var ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = 14;
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(56, 56, W - 112, H - 112, 48);
+      ctx.stroke();
+    } else {
+      ctx.strokeRect(56, 56, W - 112, H - 112);
+    }
+
+    var tag = resolveTag(state.kind);
+    if (tag) {
+      ctx.font = '500 40px "PingFang SC","Microsoft YaHei",sans-serif';
+      var tw = ctx.measureText(tag).width;
+      ctx.fillStyle = '#fdeef0';
+      var padX = 32, boxH = 72, boxW = tw + padX * 2;
+      if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(110, 110, boxW, boxH, boxH / 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(110, 110, boxW, boxH);
+      }
+      ctx.fillStyle = '#c8102e';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(tag, 110 + padX, 110 + boxH / 2);
+    }
+
+    var text = content.textContent || '';
+    var maxWidth = W - 280;
+    var fontSize = 128;
+    var lines;
+
+    // 逐步缩小字号，直到文字能放进卡片中部
+    do {
+      ctx.font = '700 ' + fontSize + 'px "PingFang SC","Microsoft YaHei",sans-serif';
+      lines = wrapText(ctx, text, maxWidth);
+      if (lines.length <= 4) break;
+      fontSize -= 8;
+    } while (fontSize > 56);
+
+    ctx.fillStyle = '#1a1a1a';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    var lineHeight = fontSize * 1.3;
+    var startY = H / 2 - ((lines.length - 1) * lineHeight) / 2;
+    lines.forEach(function (line, i) {
+      ctx.fillText(line, W / 2, startY + i * lineHeight);
+    });
+
+    ctx.font = '400 38px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillStyle = '#8c8c8c';
+    ctx.fillText(hint.textContent, W / 2, H - 190);
+
+    ctx.font = '400 30px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillStyle = '#b4b2a9';
+    ctx.fillText('麦麦免开口', W / 2, H - 110);
+
+    try {
+      var a = document.createElement('a');
+      a.download = '麦当劳-' + text.slice(0, 12) + '.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+      showToast('图片已保存，可以直接转发');
+    } catch (e) {
+      showToast('保存失败，可用截屏代替');
+    }
+  }
+
+  function wrapText(ctx, text, maxWidth) {
+    var lines = [];
+    var line = '';
+    for (var i = 0; i < text.length; i++) {
+      var test = line + text[i];
+      if (ctx.measureText(test).width > maxWidth && line) {
+        lines.push(line);
+        line = text[i];
+      } else {
+        line = test;
+      }
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  // 角标切换
+  var tagIndex = 0;
+  document.getElementById('tagSwitch').addEventListener('click', function () {
+    tagIndex = (tagIndex + 1) % TAGS.length;
+    state.tagMode = TAGS[tagIndex].value;
+    this.textContent = '角标：' + TAGS[tagIndex].label + ' ▾';
+    apply(content.textContent, state.kind);
+  });
+
+  // URL 参数：?t=麻烦给我一根吸管&k=item&tag=i人友好
+  var params = new URLSearchParams(window.location.search);
+  var t = params.get('t');
+  var tagParam = params.get('tag');
+  if (tagParam) state.explicitTag = tagParam;
+
+  buildPresets();
+
+  if (t) {
+    apply(t, (params.get('k') || 'item').toLowerCase());
+  } else {
+    apply('麻烦给我一根吸管', 'item');
+  }
+
+  // 预设里没有的角标，作为「跟随场景」时的覆盖值
+  if (tagParam) {
+    state.tagMode = tagParam;
+    apply(content.textContent, state.kind);
+  }
+
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      apply(input.value.trim(), state.kind);
+    }
+  });
+
+  document.getElementById('use').addEventListener('click', function () {
+    var v = input.value.trim();
+    if (v) apply(v, state.kind);
+  });
+
+  document.getElementById('speak').addEventListener('click', function () {
+    if (!('speechSynthesis' in window)) {
+      showToast('当前浏览器不支持朗读，请直接把屏幕给店员看');
+      return;
+    }
+    window.speechSynthesis.cancel();
+    var text = content.textContent.replace(/[。！!]+$/, '');
+    var utter = new SpeechSynthesisUtterance(
+      state.kind === 'thanks' ? text : '你好，' + text + '，谢谢。'
+    );
+    utter.lang = 'zh-CN';
+    utter.rate = 0.95;
+    window.speechSynthesis.speak(utter);
+  });
+
+  document.getElementById('fullscreen').addEventListener('click', function () {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    }
+  });
+
+  document.getElementById('save').addEventListener('click', exportImage);
+})();
+</script>
+</body>
+</html>

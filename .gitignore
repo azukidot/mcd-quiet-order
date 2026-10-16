@@ -1,0 +1,29 @@
+# 编辑器 / 系统
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 本地工作数据（笔记、缓存等，不参与分发）
+.workbuddy/
+
+# 本地环境变量与凭证
+.env
+.env.local
+*.token
+
+# 本地草稿与素材
+# 约定：私稿、素材一律放 .workbuddy/ 下（已整体忽略）；其余零散草稿用这些通用名
+*draft*
+*草稿*
+
+# 临时文件
+*.tmp
+*.log

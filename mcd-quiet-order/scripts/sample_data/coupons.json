@@ -1,0 +1,35 @@
+{
+  "_comment": "券规则为示例数据，模拟 MCP 三个查券工具返回结果归一化后的形态。真实券规则以麦当劳系统为准，必须经 calculate-price 核价。",
+  "coupons": [
+    {
+      "id": "C1", "type": "item_price", "title": "巨无霸立减 7 元",
+      "item_codes": ["BIGMAC"], "override_price_fen": 1800,
+      "stackable": false, "channel": "any", "couponCode": "SAMPLE-C1"
+    },
+    {
+      "id": "C2", "type": "percent", "title": "小食 8 折",
+      "item_codes": ["FRIES_M", "FRIES_L", "NUGGETS_5"], "discount_pct": 0.8,
+      "stackable": false, "channel": "any", "couponCode": "SAMPLE-C2"
+    },
+    {
+      "id": "C3", "type": "threshold", "title": "满 40 减 10",
+      "min_spend_fen": 4000, "discount_fen": 1000,
+      "stackable": true, "channel": "any", "couponCode": "SAMPLE-C3"
+    },
+    {
+      "id": "C4", "type": "bundle_price", "title": "1+1 随心配 12.9 元",
+      "groups": [["BIGMAC", "MCFLOWER"], ["FRIES_M", "COKE_M"]],
+      "price_fen": 1290, "stackable": false, "channel": "pickup", "couponCode": "SAMPLE-C4"
+    },
+    {
+      "id": "C5", "type": "free_gift", "title": "满 20 送香芋派",
+      "min_spend_fen": 2000, "gift_codes": ["PIE"],
+      "stackable": true, "channel": "any", "couponCode": "SAMPLE-C5"
+    },
+    {
+      "id": "D1", "type": "threshold", "title": "外送专享 满 40 减 8",
+      "min_spend_fen": 4000, "discount_fen": 800,
+      "stackable": true, "channel": "delivery", "couponCode": "SAMPLE-D1"
+    }
+  ]
+}

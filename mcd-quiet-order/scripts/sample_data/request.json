@@ -1,0 +1,8 @@
+{
+  "wants": ["巨无霸套餐", "麦乐鸡5块"],
+  "budget_fen": 6000,
+  "max_items": 3,
+  "allow_extras": false,
+  "dining_mode": "pickup",
+  "delivery_fee_fen": 900
+}
