@@ -192,10 +192,10 @@ python mcd-quiet-order/scripts/quiet_card.py --preset 吸管
 
 ### ⚡ 懒人通道：把这段话发给你的 Agent
 
-不想自己一步步配？**把下面整段复制，发给你正在用的 AI Agent**（WorkBuddy、Cursor、Cherry Studio 都行），它会带着你走完全程。发之前只需替换两个 `<>` 占位。
+不想自己一步步配？**把下面整段复制，发给你正在用的 AI Agent**（WorkBuddy、Cursor、Cherry Studio 都行），它会带着你走完全程。发之前只需把第 2 步里的客户端占位换成你自己在用的那个。
 
 ```text
-请帮我部署一个开源 Skill，仓库地址：<在此粘贴本仓库的 GitHub 地址>
+请帮我部署一个开源 Skill，仓库地址：https://github.com/azukidot/mcd-quiet-order
 
 按下面五步来做，每完成一步先告诉我结果，再进下一步：
 
